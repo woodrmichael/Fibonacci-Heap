@@ -1,58 +1,88 @@
 package datastructures;
 
-public class FibonacciHeap<T extends Comparable<T>> {
-    private Node<T> minimum;
+import java.util.List;
 
-    private static final class Node<T> {
+public class FibonacciHeap<T extends Comparable<T>> {
+    private Node<T> min;
+    private int size;
+
+    public static final class Node<T> {
         private int key;
         private T value;
+        private Node<T> parent;
+        private Node<T> child;
         private Node<T> left;
         private Node<T> right;
         private int degree;
+        private boolean marked;
 
         public Node(T value, int key) {
             this.key = key;
             this.value = value;
-            this.left = null;
-            this.right = null;
-            this.degree = 0;
+            parent = null;
+            child = null;
+            left = null;
+            right = null;
+            degree = 0;
+            marked = false;
         }
     }
 
-
     public FibonacciHeap() {
-
+        this.min = null;
+        this.size = 0;
     }
 
-    public void heapify() {
-
+    public FibonacciHeap<T> heapify(List<T> list) {
+        // TODO
+        return this;
     }
 
-    public void insert(T value, int key) {
-
+    public Node<T> insert(T value, int key) {
+        Node<T> newNode = new Node(value, key);
+        // TODO
+        return newNode;
     }
 
-    public void union() {
-
+    public FibonacciHeap<T> union(FibonacciHeap<T> other) {
+        // TODO
+        return this;
     }
 
-    public T minimum() {
-        return minimum.value;
+    public Node<T> minimum() {
+        return min;
     }
 
-    public T extractMinimum() {
-        return null;
+    public Node<T> extractMin() {
+        Node<T> oldMin = min;
+        // TODO
+        return oldMin;
     }
 
     public int size() {
-        return 0;
+        return size;
     }
 
-    public void decreaseKey(T value, int key) {
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public void decreaseKey(Node<T> node, int newKey) {
 
     }
 
-    public void delete(T value) {
+    public void delete(Node<T> node) {
+        decreaseKey(node, Integer.MIN_VALUE);
+        extractMin();
+    }
 
+    // Method to consolidate the heap after extracting the minimum node
+    private void consolidate() {
+
+    }
+
+    // Method to link two nodes (used in consolidation)
+    private void link(Node<T> y, Node<T> x) {
+        // Link logic here
     }
 }
