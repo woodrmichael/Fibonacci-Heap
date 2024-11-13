@@ -19,12 +19,8 @@ public class FibonacciHeap<T extends Comparable<T>> {
         public Node(T value, int key) {
             this.key = key;
             this.value = value;
-            parent = null;
-            child = null;
-            left = null;
-            right = null;
-            degree = 0;
-            marked = false;
+            left = this;
+            right = this;
         }
     }
 
@@ -38,9 +34,27 @@ public class FibonacciHeap<T extends Comparable<T>> {
         return this;
     }
 
+    /**
+     * Inserts a new node to the right of the current minimum node.
+     * @param value the value of the new node.
+     * @param key the key of the new node.
+     * @return the new node.
+     */
     public Node<T> insert(T value, int key) {
-        Node<T> newNode = new Node(value, key);
-        // TODO
+        Node<T> newNode = new Node<>(value, key);
+        if (min != null) {
+            Node<T> oldRightNode = min.right;
+            min.right = newNode;
+            newNode.left = min;
+            oldRightNode.left = newNode;
+            newNode.right = oldRightNode;
+            if (key < min.key) {
+                min = newNode;
+            }
+        } else {
+            min = newNode;
+        }
+        size++;
         return newNode;
     }
 
@@ -65,6 +79,11 @@ public class FibonacciHeap<T extends Comparable<T>> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void clear() {
+        min = null;
+        size = 0;
     }
 
     public void decreaseKey(Node<T> node, int newKey) {
