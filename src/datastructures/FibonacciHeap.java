@@ -35,7 +35,18 @@ public class FibonacciHeap<T extends Comparable<T>> {
     }
 
     /**
-     * Inserts a new node to the right of the current minimum node.
+     * Inserts a new node in the root list to the right of the current minimum node.
+     * Operation is performed in O(1) time.
+     * <br>
+     * Before: insert(..., 2) <br>
+     * min-----------| <br>
+     * |-> (...) -> (3) <-> (4) <-> (5) <-> (...) <-| <br>
+     * |--------------------------------------------| <br>
+     * After: <br>
+     * min--------------------| <br>
+     * |-> (...) <-> (3) <-> (2) <-> (4) <-> (5) <-> (...) <-| <br>
+     * |-----------------------------------------------------|
+     *
      * @param value the value of the new node.
      * @param key the key of the new node.
      * @return the new node.
