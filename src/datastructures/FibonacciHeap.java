@@ -1,9 +1,15 @@
 package datastructures;
 
-public class FibonacciHeap<T extends Comparable<T>> {
+public class FibonacciHeap<T> {
     private Node<T> min;
     private int size;
 
+    /**
+     * A node in a Fibonacci Heap which has a value and a key.
+     * A node has a reference to its left and right neighbors
+     * as well as its parent and child if any.
+     * @param <T> the type of the value.
+     */
     public static final class Node<T> {
         private int key;
         private T value;
@@ -14,6 +20,13 @@ public class FibonacciHeap<T extends Comparable<T>> {
         private int degree;
         private boolean marked;
 
+        /**
+         * Initializes a Node with a value and key.
+         * Since the root list and child lists are doubly circular linked lists,
+         * left and right are automatically initialized to itself.
+         * @param value the data value to store.
+         * @param key the priority of this node.
+         */
         public Node(T value, int key) {
             this.key = key;
             this.value = value;
@@ -36,6 +49,9 @@ public class FibonacciHeap<T extends Comparable<T>> {
         }
     }
 
+    /**
+     * Initializes a new Fibonacci Heap with a size of 0 and min points to null.
+     */
     public FibonacciHeap() {
         this.min = null;
         this.size = 0;
