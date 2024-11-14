@@ -145,16 +145,40 @@ public class FibonacciHeap<T> {
         // TODO
     }
 
-    // Cuts the node from its parent and moves it to the root list.
-    // This is used during decreaseKey when a node violates the heap property.
+    /**
+     * Cuts the specified node from its parent and moves it to the root list.
+     * This operation is used during a decrease-key operation when a node
+     * violates the heap property. The cut method also handles cascading cuts
+     * if necessary, ensuring that any marked ancestors of the node are also
+     * cut and added to the root list.
+     *
+     * @param node The node to be cut from its parent and added to the root list.
+     * @param parent The parent of the node being cut.
+     */
     private void cut(Node<T> node, Node<T> parent) {
-        // TODO
-    }
+        if (node.right == node) {
+            parent.child = null;
+        } else {
+            node.right.left = node.left;
+            node.left.right = node.right;
+            if (parent.child == node) {
+                parent.child = node.right;
+            }
+        }
 
-    // Performs cascading cuts. When a node is cut from its parent, it may trigger cuts up the tree.
-    // This method ensures all necessary nodes are cut recursively and added to the root list.
-    private void cascadingCut(Node<T> node) {
-        // TODO
+        parent.degree--;
+        node.parent = null;
+        node.marked = false;
+
+        addToRootList(node);
+
+        if (parent.parent != null) { // Ensure we aren't going to mark a node in the root list
+            if (parent.marked) { // Perform a cascading cut if the parent is marked already
+                cut(parent, parent.parent);
+            } else {
+                parent.marked = true;
+            }
+        }
     }
 
     // Ensures that there are no two trees in the root list with the same degree by merging them.
