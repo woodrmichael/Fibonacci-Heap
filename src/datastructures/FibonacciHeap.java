@@ -78,18 +78,7 @@ public class FibonacciHeap<T> {
      */
     public Node<T> insert(T value, int key) {
         Node<T> newNode = new Node<>(value, key);
-        if (min != null) {
-            Node<T> oldRightNode = min.right;
-            min.right = newNode;
-            newNode.left = min;
-            oldRightNode.left = newNode;
-            newNode.right = oldRightNode;
-            if (key < min.key) {
-                min = newNode;
-            }
-        } else {
-            min = newNode;
-        }
+        addToRootList(newNode);
         size++;
         return newNode;
     }
@@ -174,9 +163,24 @@ public class FibonacciHeap<T> {
         // TODO
     }
 
-    // Adds a node to the root list of the heap. This is useful in decreaseKey, cut, and insert.
+    // decrease key, cut, insert
+    /**
+     * Adds a single node to the root list and updates min.
+     * This node will be added to the right of the current node.
+     * @param node a node with no neighbors.
+     */
     private void addToRootList(Node<T> node) {
-        // TODO
+        if (min != null) {
+            node.left = min;
+            node.right = min.right;
+            min.right.left = node;
+            min.right = node;
+            if (node.key < min.key) {
+                min = node;
+            }
+        } else {
+            min = node;
+        }
     }
 
     // Removes a node from the root list, used in extractMin and possibly other cleanup operations.
