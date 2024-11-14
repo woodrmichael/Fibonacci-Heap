@@ -1,7 +1,29 @@
 package datastructures;
 
+/**
+ * Implements a Fibonacci Heap, a data structure for priority queues that supports
+ * efficient operations such as insert, extract-min, and decrease-key. Fibonacci
+ * heaps provide better amortized time complexity for several operations compared
+ * to other heap structures like binary heaps, especially in scenarios that involve
+ * many decrease-key and extract-min operations.
+ *
+ * @param <T> The type of the values stored in the heap. This can be any object type.
+ */
 public class FibonacciHeap<T> {
+
+    /**
+     * The minimum node in the Fibonacci heap. This node has the smallest key value
+     * among all the nodes in the heap. The `min` node is used to efficiently perform
+     * the `extract-min` operation, which removes the node with the smallest key from the heap. <br>
+     *
+     * The `min` node is always maintained at the root level and is updated after
+     * each operation (e.g., insert, extract-min, etc.).
+     */
     private Node<T> min;
+
+    /**
+     * The total number of nodes in the Fibonacci heap.
+     */
     private int size;
 
     /**
@@ -11,13 +33,56 @@ public class FibonacciHeap<T> {
      * @param <T> the type of the value.
      */
     public static final class Node<T> {
+
+        /**
+         * The value stored in the node. This is the data associated with the node,
+         * which may be of any generic type.
+         */
+        private final T value;
+
+        /**
+         * The key associated with the node. Used for ordering the node in the heap.
+         */
         private int key;
-        private T value;
+
+        /**
+         * The parent node of this node. This node's parent is the node in the heap's
+         * tree structure that directly points to one of its siblings in the child list.
+         * If the node is in the root list, this pointer is null.
+         */
         private Node<T> parent;
+
+        /**
+         * The first child node of this node. If the node has no children, this pointer
+         * is null. The child pointer is used to represent the node's subtree.
+         */
         private Node<T> child;
+
+        /**
+         * A pointer to the left sibling of this node in the doubly linked circular list
+         * of siblings. This is used to traverse the sibling list of a node.
+         */
         private Node<T> left;
+
+        /**
+         * A pointer to the right sibling of this node in the doubly linked circular list
+         * of siblings. This is used to traverse the sibling list of a node.
+         */
         private Node<T> right;
+
+        /**
+         * The degree of the node. Represents the number of direct children the node has.
+         * The degree is incremented when a new child is added to the node, and decremented
+         * when a child is removed.
+         */
         private int degree;
+
+        /**
+         * A flag indicating whether the node has lost a child since it was last marked.
+         * This is used in the cascading cut mechanism during decrease-key operations.
+         * The node is marked after losing a child, and the mark is reset when the node
+         * is moved to the root list.
+         */
         private boolean marked;
 
         /**
