@@ -138,11 +138,38 @@ public class FibonacciHeap<T> {
         extractMin();
     }
 
-    // A helper method used in the consolidate step.
-    // This method links two trees of the same degree by making one node a child of the other,
-    // increasing the degree of the new parent.
+    /**
+     * Links two trees of the same degree by making node y a child of node x.
+     * This method is used in the consolidate step of the Fibonacci heap to
+     * reduce the number of trees in the root list by combining trees with the
+     * same degree. <br>
+     *
+     * The method assumes that the key of x is less than or equal to the key of y,
+     * making x the new parent of y. Node y is removed from the root list and added
+     * as a child of x, and the degree of x is incremented to reflect the addition
+     * of a new child.
+     *
+     * @param y The node to be made a child. This node will be removed from the root list.
+     * @param x The node that will become the parent of y. This node's degree will be increased.
+     */
     private void link(Node<T> y, Node<T> x) {
-        // TODO
+        y.right.left = y.left;
+        y.left.right = y.right;
+
+        y.parent = x;
+        x.degree++;
+        y.marked = false;
+
+        if (x.child == null) {
+            x.child = y;
+            y.left = y;
+            y.right = y;
+        } else {
+            y.left = x.child;
+            y.right = x.child.right;
+            x.child.right.left = y;
+            x.child.right = y;
+        }
     }
 
     /**
@@ -172,7 +199,8 @@ public class FibonacciHeap<T> {
 
         addToRootList(node);
 
-        if (parent.parent != null) { // Ensure we aren't going to mark a node in the root list
+        // Ensure we aren't going to cascade cut a node in the root list
+        if (parent.parent != null) {
             if (parent.marked) { // Perform a cascading cut if the parent is marked already
                 cut(parent, parent.parent);
             } else {
