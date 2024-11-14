@@ -1,7 +1,5 @@
 package datastructures;
 
-import java.util.List;
-
 public class FibonacciHeap<T extends Comparable<T>> {
     private Node<T> min;
     private int size;
@@ -22,6 +20,20 @@ public class FibonacciHeap<T extends Comparable<T>> {
             left = this;
             right = this;
         }
+
+        public T getValue() {
+            return value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{value=" + value + ", key=" + key
+                    + ", degree=" + degree + ", marked=" + marked + "}";
+        }
     }
 
     public FibonacciHeap() {
@@ -29,19 +41,16 @@ public class FibonacciHeap<T extends Comparable<T>> {
         this.size = 0;
     }
 
-    public FibonacciHeap<T> heapify(List<T> list) {
-        // TODO
-        return this;
-    }
-
     /**
      * Inserts a new node in the root list to the right of the current minimum node.
-     * Operation is performed in O(1) time.
-     * <br>
+     * No consolidation is performed when a new node is inserted.
+     * Operation is performed in O(1) time. <br>
+     *
      * Before: insert(..., 2) <br>
-     * min-----------| <br>
-     * |-> (...) -> (3) <-> (4) <-> (5) <-> (...) <-| <br>
-     * |--------------------------------------------| <br>
+     * min------------| <br>
+     * |-> (...) <-> (3) <-> (4) <-> (5) <-> (...) <-| <br>
+     * |---------------------------------------------| <br>
+     *
      * After: <br>
      * min--------------------| <br>
      * |-> (...) <-> (3) <-> (2) <-> (4) <-> (5) <-> (...) <-| <br>
@@ -69,9 +78,24 @@ public class FibonacciHeap<T extends Comparable<T>> {
         return newNode;
     }
 
-    public FibonacciHeap<T> union(FibonacciHeap<T> other) {
-        // TODO
-        return this;
+    /**
+     * Merges 2 Fibonacci Heaps in O(1) time. Adds other's root list to the current root list.
+     * No consolidation is performed when union is called.
+     * @param other the Fibonacci Heap which is being merged with the current Fibonacci Heap.
+     */
+    public void union(FibonacciHeap<T> other) {
+        if (other.min != null) {
+            Node<T> oldThisLeftNode = this.min.left;
+            Node<T> oldOtherLeftNode = other.min.left;
+            oldThisLeftNode.right = other.min;
+            other.min.left = oldThisLeftNode;
+            oldOtherLeftNode.right = this.min;
+            this.min.left = oldOtherLeftNode;
+            if (other.min.key < this.min.key) {
+                min = other.min;
+            }
+            size = this.size + other.size;
+        }
     }
 
     public Node<T> minimum() {
@@ -89,7 +113,7 @@ public class FibonacciHeap<T extends Comparable<T>> {
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return min == null;
     }
 
     public void clear() {
@@ -115,4 +139,6 @@ public class FibonacciHeap<T extends Comparable<T>> {
     private void link(Node<T> y, Node<T> x) {
         // Link logic here
     }
+
+
 }
