@@ -121,8 +121,11 @@ public class FibonacciHeap<T extends Comparable<T>> {
         size = 0;
     }
 
+    // Decreases the key of a given node to a new, smaller value.
+    // If the new key violates the heap-order property (is smaller than the key of the parent),
+    // the node is cut from its parent, added to the root list, and may trigger cascading cuts
     public void decreaseKey(Node<T> node, int newKey) {
-
+        // TODO
     }
 
     public void delete(Node<T> node) {
@@ -130,15 +133,52 @@ public class FibonacciHeap<T extends Comparable<T>> {
         extractMin();
     }
 
-    // Method to consolidate the heap after extracting the minimum node
-    private void consolidate() {
-
-    }
-
-    // Method to link two nodes (used in consolidation)
+    // A helper method used in the consolidate step.
+    // This method links two trees of the same degree by making one node a child of the other,
+    // increasing the degree of the new parent.
     private void link(Node<T> y, Node<T> x) {
-        // Link logic here
+        // TODO
     }
 
+    // Cuts the node from its parent and moves it to the root list.
+    // This is used during decreaseKey when a node violates the heap property.
+    private void cut(Node<T> node, Node<T> parent) {
+        // TODO
+    }
 
+    // Performs cascading cuts. When a node is cut from its parent, it may trigger cuts up the tree.
+    // This method ensures all necessary nodes are cut recursively and added to the root list.
+    private void cascadingCut(Node<T> node) {
+        // TODO
+    }
+
+    // Ensures that there are no two trees in the root list with the same degree by merging them.
+    // This is called in extractMin() after the minimum node has been removed.
+    private void consolidate() {
+        // TODO
+    }
+
+    // Adds a node to the root list of the heap. This is useful in decreaseKey, cut, and insert.
+    private void addToRootList(Node<T> node) {
+        // TODO
+    }
+
+    // Removes a node from the root list, used in extractMin and possibly other cleanup operations.
+    private void removeFromRootList(Node<T> node) {
+        // TODO
+    }
+
+    /**
+     * Tester method currently for root list
+     * @return
+     */
+    public String toString() {
+        String ret = "";
+        Node<T> current = min;
+        for (int i = 0; i < size; i++) {
+            ret += current.key + " ";
+            current = current.right;
+        }
+        return ret;
+    }
 }
