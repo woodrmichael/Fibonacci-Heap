@@ -326,10 +326,8 @@ public class FibonacciHeap<T> {
      *
      * @see #link(Node, Node)
      */
-    public void consolidate() {
-        final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
-        final int degreeTableSize = Math.min(size, maxDegree); // More memory efficient for smaller heaps.
-        final Node<T>[] degreeTable = new Node[degreeTableSize];
+    private void consolidate() {
+        final Node<T>[] degreeTable = new Node[size];
 
         Node<T> startingNode = min;
         Node<T> current = startingNode;
@@ -377,22 +375,21 @@ public class FibonacciHeap<T> {
         }
     }
 
-    // Removes a node from the root list, used in extractMin and possibly other cleanup operations.
-    private void removeFromRootList(Node<T> node) {
-        // TODO
-    }
-
-    /**
-     * Tester method currently for root list
-     * @return
-     */
+    @Override
     public String toString() {
-        String ret = "";
+        StringBuilder str = new StringBuilder();
+        str.append("FibonacciHeap{[");
+
         Node<T> current = min;
-        for (int i = 0; i < size; i++) {
-            ret += current.key + " ";
+        do {
+            str.append(current);
             current = current.right;
-        }
-        return ret;
+            if (current != min) {
+                str.append(", ");
+            }
+        } while (current != min);
+
+        str.append("], size=").append(size).append("}");
+        return str.toString();
     }
 }
