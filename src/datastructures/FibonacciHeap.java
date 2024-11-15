@@ -291,12 +291,14 @@ public class FibonacciHeap<T> {
      */
     public void consolidate() {
         final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
-        final Node<T>[] degreeTable = new Node[maxDegree];
+        final int degreeTableSize = Math.min(size, maxDegree); // More memory efficient for smaller heaps.
+        final Node<T>[] degreeTable = new Node[degreeTableSize];
 
         Node<T> startingNode = min;
         Node<T> current = startingNode;
         do {
             while (degreeTable[current.degree] != null) {
+                // collisionNode is the node already in the degree table with the same degree as the current node.
                 Node<T> collisionNode = degreeTable[current.degree];
                 degreeTable[current.degree] = null;
 
@@ -309,9 +311,11 @@ public class FibonacciHeap<T> {
                 }
             }
             degreeTable[current.degree] = current;
+
             if (current.key < min.key) {
                 min = current;
             }
+
             current = current.left;
         } while (current != startingNode); // Loop until we hit the node we started at.
     }
