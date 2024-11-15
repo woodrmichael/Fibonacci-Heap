@@ -1,5 +1,8 @@
 package datastructures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implements a Fibonacci Heap, a data structure for priority queues that supports
  * efficient operations such as insert, extract-min, and decrease-key. Fibonacci
@@ -207,8 +210,8 @@ public class FibonacciHeap<T> {
      * Links two trees of the same degree by making node y a child of node x.
      * This method is used in the consolidate step of the Fibonacci heap to
      * reduce the number of trees in the root list by combining trees with the
-     * same degree. <br>
-     *
+     * same degree.
+     * <p>
      * The method assumes that the key of x is less than or equal to the key of y,
      * making x the new parent of y. Node y is removed from the root list and added
      * as a child of x, and the degree of x is incremented to reflect the addition
@@ -274,10 +277,49 @@ public class FibonacciHeap<T> {
         }
     }
 
-    // Ensures that there are no two trees in the root list with the same degree by merging them.
-    // This is called in extractMin() after the minimum node has been removed.
-    private void consolidate() {
-        // TODO
+    /**
+     * Consolidates the trees in the Fibonacci heap. This operation merges trees of the same degree
+     * in the root list into a single tree, ensuring that there is only one tree of each degree in the
+     * root list. The method iterates over all the root nodes, links trees of the same degree, and updates
+     * the minimum node. After consolidation, the heap will have a set of trees with unique degrees,
+     * and the root list will contain the consolidated trees.
+     * <p>
+     * This operation maintains the Fibonacci heap property and reduces the number of trees in the root list.
+     * The time complexity of this operation is O(log n), where n is the number of nodes in the heap.
+     *
+     * @see #link(Node, Node)
+     */
+    public void consolidate() {
+        final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
+        final Node<T>[] degreeTable = new Node[maxDegree];
+        final List<Node<T>> rootList = new ArrayList<>();
+        Node<T> current = min;
+
+        // Traverse all root nodes and add them to rootList.
+        do {
+            rootList.add(current);
+            current = current.right;
+        } while (current != min);
+
+        // Consolidate the trees in the root list
+        for (Node<T> node : rootList) {
+            while (degreeTable[node.degree] != null) {
+                Node<T> collisionNode = degreeTable[node.degree];
+                degreeTable[node.degree] = null;
+
+                if (collisionNode.key < node.key) {
+                    link(node, collisionNode);
+                    // node isn't in root list anymore, so we need to update it to node's parent.
+                    node = node.parent;
+                } else {
+                    link(collisionNode, node);
+                }
+            }
+            degreeTable[node.degree] = node;
+            if (node.key < min.key) {
+                min = node;
+            }
+        }
     }
 
     // decrease key, cut, insert
