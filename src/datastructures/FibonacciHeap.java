@@ -1,8 +1,5 @@
 package datastructures;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Implements a Fibonacci Heap, a data structure for priority queues that supports
  * efficient operations such as insert, extract-min, and decrease-key. Fibonacci
@@ -175,10 +172,50 @@ public class FibonacciHeap<T> {
         return min;
     }
 
+    /**
+     * Removes and returns the node with the smallest key in the Fibonacci heap. <br>
+     *
+     * This method performs the following steps: <br>
+     * - Identifies the current minimum node in the heap. <br>
+     * - Moves all children of the minimum node to the root list of the heap,
+     *   resetting their parent pointers to {@code null}.
+     * - Removes the minimum node from the root list. <br>
+     * - If the heap is not empty after removal, selects a new minimum node
+     *   and calls {@link #consolidate()} to merge trees and restore heap structure. <br>
+     * - Updates the size of the heap. <br>
+     *
+     * If the heap is empty, this method returns {@code null}.
+     *
+     * @return The node with the smallest key, or {@code null} if the heap is empty.
+     */
     public Node<T> extractMin() {
-        Node<T> oldMin = min;
-        // TODO
-        return oldMin;
+        Node<T> extractedMin = min;
+        if (extractedMin != null) {
+
+            if (extractedMin.child != null) {
+                // Move all children of extractedMin to root list.
+                Node<T> current = extractedMin.child;
+                do {
+                    Node<T> next = current.right; // addToRootList updates right so save right before addToRootList is called.
+                    current.parent = null; // Set all the children of the new min to null since they are added to root list.
+                    addToRootList(current);
+                    current = next;
+                } while (current != extractedMin.child);
+            }
+
+            if (extractedMin.right == extractedMin) {
+                min = null; // no other nodes in heap so min is now null.
+            } else {
+                min.left.right = min.right;
+                min.right.left = min.left;
+                min = min.right; // arbitrary min, min will be updated in consolidate.
+
+                consolidate();
+            }
+
+            size--;
+        }
+        return extractedMin;
     }
 
     public int size() {
@@ -202,7 +239,7 @@ public class FibonacciHeap<T> {
     }
 
     public void delete(Node<T> node) {
-        decreaseKey(node, Integer.MIN_VALUE);
+        decreaseKey(node, Integer.MIN_VALUE); // might need to update methods in case another element already has min value
         extractMin();
     }
 
@@ -316,7 +353,7 @@ public class FibonacciHeap<T> {
                 min = current;
             }
 
-            current = current.left;
+            current = current.right;
         } while (current != startingNode); // Loop until we hit the node we started at.
     }
 
