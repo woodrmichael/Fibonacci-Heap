@@ -168,6 +168,10 @@ public class FibonacciHeap<T> {
         }
     }
 
+    /**
+     * Returns the minimum node in the Fibonacci heap.
+     * @return the node with the minimum key in the heap, or {@code null} if the heap is empty.
+     */
     public Node<T> minimum() {
         return min;
     }
@@ -218,14 +222,25 @@ public class FibonacciHeap<T> {
         return extractedMin;
     }
 
+    /**
+     * Returns the number of nodes in the Fibonacci heap.
+     * @return the total number of nodes in the Fibonacci heap.
+     */
     public int size() {
         return size;
     }
 
+    /**
+     * Checks if the Fibonacci heap is empty.
+     * @return {@code true} if the Fibonacci heap is empty, {@code false} otherwise.
+     */
     public boolean isEmpty() {
         return min == null;
     }
 
+    /**
+     * Clears the Fibonacci heap, removing all nodes.
+     */
     public void clear() {
         min = null;
         size = 0;
