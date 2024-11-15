@@ -292,34 +292,28 @@ public class FibonacciHeap<T> {
     public void consolidate() {
         final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
         final Node<T>[] degreeTable = new Node[maxDegree];
-        final List<Node<T>> rootList = new ArrayList<>();
-        Node<T> current = min;
 
-        // Traverse all root nodes and add them to rootList.
+        Node<T> startingNode = min;
+        Node<T> current = startingNode;
         do {
-            rootList.add(current);
-            current = current.right;
-        } while (current != min);
+            while (degreeTable[current.degree] != null) {
+                Node<T> collisionNode = degreeTable[current.degree];
+                degreeTable[current.degree] = null;
 
-        // Consolidate the trees in the root list
-        for (Node<T> node : rootList) {
-            while (degreeTable[node.degree] != null) {
-                Node<T> collisionNode = degreeTable[node.degree];
-                degreeTable[node.degree] = null;
-
-                if (collisionNode.key < node.key) {
-                    link(node, collisionNode);
+                if (collisionNode.key < current.key) {
+                    link(current, collisionNode);
                     // node isn't in root list anymore, so we need to update it to node's parent.
-                    node = node.parent;
+                    current = current.parent;
                 } else {
-                    link(collisionNode, node);
+                    link(collisionNode, current);
                 }
             }
-            degreeTable[node.degree] = node;
-            if (node.key < min.key) {
-                min = node;
+            degreeTable[current.degree] = current;
+            if (current.key < min.key) {
+                min = current;
             }
-        }
+            current = current.left;
+        } while (current != startingNode); // Loop until we hit the node we started at.
     }
 
     // decrease key, cut, insert
