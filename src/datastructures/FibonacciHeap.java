@@ -1,5 +1,8 @@
 package datastructures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implements a Fibonacci Heap, a data structure for priority queues that supports
  * efficient operations such as insert, extract-min, and decrease-key. Fibonacci
@@ -206,6 +209,7 @@ public class FibonacciHeap<T> {
                     current = next;
                 } while (current != extractedMin.child);
             }
+            size--;
 
             if (extractedMin.right == extractedMin) {
                 min = null; // no other nodes in heap so min is now null.
@@ -216,8 +220,6 @@ public class FibonacciHeap<T> {
 
                 consolidate();
             }
-
-            size--;
         }
         return extractedMin;
     }
@@ -342,32 +344,39 @@ public class FibonacciHeap<T> {
      * @see #link(Node, Node)
      */
     private void consolidate() {
-        final Node<T>[] degreeTable = new Node[size];
+        final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
+        final int degreeTableSize = Math.min(size, maxDegree); // More memory efficient for smaller heaps.
+        final Node<T>[] degreeTable = new Node[degreeTableSize];
+        final List<Node<T>> rootList = new ArrayList<>();
 
-        Node<T> startingNode = min;
-        Node<T> current = startingNode;
+        Node<T> current = min;
+        // Traverse all root nodes and add them to rootList.
         do {
-            while (degreeTable[current.degree] != null) {
-                // collisionNode is the node already in the degree table with the same degree as the current node.
-                Node<T> collisionNode = degreeTable[current.degree];
-                degreeTable[current.degree] = null;
+            rootList.add(current);
+            current = current.right;
+        } while (current != min);
 
-                if (collisionNode.key < current.key) {
-                    link(current, collisionNode);
+        // Consolidate the trees in the root list
+        for (Node<T> node : rootList) {
+            while (degreeTable[node.degree] != null) {
+                Node<T> collisionNode = degreeTable[node.degree];
+                degreeTable[node.degree] = null;
+
+                if (collisionNode.key < node.key) {
+                    link(node, collisionNode);
                     // node isn't in root list anymore, so we need to update it to node's parent.
-                    current = current.parent;
+                    node = node.parent;
                 } else {
-                    link(collisionNode, current);
+                    link(collisionNode, node);
                 }
             }
-            degreeTable[current.degree] = current;
 
-            if (current.key < min.key) {
-                min = current;
+            degreeTable[node.degree] = node;
+
+            if (node.key < min.key) {
+                min = node;
             }
-
-            current = current.right;
-        } while (current != startingNode); // Loop until we hit the node we started at.
+        }
     }
 
     // decrease key, cut, insert
@@ -395,14 +404,16 @@ public class FibonacciHeap<T> {
         StringBuilder str = new StringBuilder();
         str.append("FibonacciHeap{[");
 
-        Node<T> current = min;
-        do {
-            str.append(current);
-            current = current.right;
-            if (current != min) {
-                str.append(", ");
-            }
-        } while (current != min);
+        if (min != null) {
+            Node<T> current = min;
+            do {
+                str.append(current);
+                current = current.right;
+                if (current != min) {
+                    str.append(", ");
+                }
+            } while (current != min);
+        }
 
         str.append("], size=").append(size).append("}");
         return str.toString();
