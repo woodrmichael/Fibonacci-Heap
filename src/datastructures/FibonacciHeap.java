@@ -248,15 +248,44 @@ public class FibonacciHeap<T> {
         size = 0;
     }
 
-    // Decreases the key of a given node to a new, smaller value.
-    // If the new key violates the heap-order property (is smaller than the key of the parent),
-    // the node is cut from its parent, added to the root list, and may trigger cascading cuts
+    /**
+     * Decreases the key value of a given node in the Fibonacci Heap.
+     * If the new key value violates the heap property (i.e., the node's key
+     * becomes smaller than its parent's key), the node is cut from its parent
+     * and added to the root list. This may trigger cascading cuts on its ancestors
+     * if necessary.
+     *
+     * @param node The node whose key is to be decreased.
+     * @param newKey The new key value, which must be smaller than the current key.
+     * @throws IllegalArgumentException If the new key is greater than or equal to the current key.
+     */
     public void decreaseKey(Node<T> node, int newKey) {
-        // TODO
+        if (newKey >= node.key) {
+            throw new IllegalArgumentException("The new key must be less than the current key");
+        }
+
+        node.key = newKey;
+
+        if (node.parent != null && node.key < node.parent.key) {
+            cut(node, node.parent);
+        }
+
+        if (node.key <= min.key) {
+            min = node;
+        }
     }
 
+    /**
+     * Deletes a specified node from the Fibonacci Heap.
+     * The method works by first decreasing the key of the node to the minimum
+     * possible value, ensuring it becomes the minimum node in the heap. Then, the
+     * minimum node is extracted using the `extractMin` method, effectively removing
+     * the specified node from the heap.
+     *
+     * @param node The node to be deleted from the Fibonacci Heap.
+     */
     public void delete(Node<T> node) {
-        decreaseKey(node, Integer.MIN_VALUE); // might need to update methods in case another element already has min value
+        decreaseKey(node, Integer.MIN_VALUE);
         extractMin();
     }
 
