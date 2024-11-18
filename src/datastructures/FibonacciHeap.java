@@ -1,3 +1,9 @@
+/**
+ * CSC 3310 - Algorithms and Advanced Data Structures
+ * Fibonacci Heap
+ *
+ * @author Michael Wood
+ */
 package datastructures;
 
 import java.util.ArrayList;
@@ -408,7 +414,6 @@ public class FibonacciHeap<T> {
         }
     }
 
-    // decrease key, cut, insert
     /**
      * Adds a single node to the root list and updates min.
      * This node will be added to the right of the current node.
