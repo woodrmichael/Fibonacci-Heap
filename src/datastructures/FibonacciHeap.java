@@ -453,7 +453,7 @@ public class FibonacciHeap<T> {
         str.append("FibonacciHeap{[");
         if (min != null) {
             str.append("Min");
-            appendNode(str, min);
+            appendNode(str, min, false);
         }
         str.append("], size=").append(size).append("}");
         return str.toString();
@@ -466,18 +466,23 @@ public class FibonacciHeap<T> {
      *
      * @param str the {@code StringBuilder} to which the nodes will be appended.
      * @param node the starting node in the circular doubly-linked list to process.
+     * @param keyOnly true if only printing the key, false if printing all node information
      */
-    private void appendNode(StringBuilder str, Node<T> node) {
+    private void appendNode(StringBuilder str, Node<T> node, boolean keyOnly) {
         Node<T> current = node;
         do {
             if (current != min && current.parent == null) {
                 str.append("Root");
             }
 
-            str.append(current);
+            if (keyOnly) {
+                str.append("{").append(current.key).append("}");
+            } else {
+                str.append(current);
+            }
 
             if (current.child != null) {
-                appendChildren(str, current.child);
+                appendChildren(str, current.child, keyOnly);
             }
 
             if (current.right != node) {
@@ -494,10 +499,29 @@ public class FibonacciHeap<T> {
      *
      * @param str the {@code StringBuilder} to which the child nodes will be appended.
      * @param child the first child node to process.
+     * @param keyOnly true if only printing the key, false if printing all node information
      */
-    private void appendChildren(StringBuilder str, Node<T> child) {
+    private void appendChildren(StringBuilder str, Node<T> child, boolean keyOnly) {
         str.append(":[");
-        appendNode(str, child);
+        appendNode(str, child, keyOnly);
         str.append("]");
+    }
+
+    /**
+     * Returns a string representation of the Fibonacci Heap,
+     * focusing only on the keys of the nodes.
+     * The representation includes the minimum node (if present) and the overall size of the heap.
+     *
+     * @return a string representing the keys of the nodes in the Fibonacci heap.
+     */
+    public String toKeyString() {
+        StringBuilder str = new StringBuilder();
+        str.append("FibonacciHeap{[");
+        if (min != null) {
+            str.append("Min");
+            appendNode(str, min, true);
+        }
+        str.append("], size=").append(size).append("}");
+        return str.toString();
     }
 }
