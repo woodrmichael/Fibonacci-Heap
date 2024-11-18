@@ -116,6 +116,13 @@ public class FibonacciHeap<T> {
             return key;
         }
 
+        /**
+         * Returns a string representation of the node.
+         * The representation includes the node's value, key, degree,
+         * and whether it is marked.
+         *
+         * @return a string representing the node's attributes.
+         */
         @Override
         public String toString() {
             return "Node{value=" + value + ", key=" + key
@@ -433,23 +440,64 @@ public class FibonacciHeap<T> {
         }
     }
 
+    /**
+     * Returns a string representation of the Fibonacci heap.
+     * The representation includes the minimum node (if present),
+     * the heap structure with children, and the overall size of the heap.
+     *
+     * @return a string representing the current state of the Fibonacci heap.
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
         str.append("FibonacciHeap{[");
-
         if (min != null) {
-            Node<T> current = min;
-            do {
-                str.append(current);
-                current = current.right;
-                if (current != min) {
-                    str.append(", ");
-                }
-            } while (current != min);
+            str.append("Min");
+            appendNode(str, min);
         }
-
         str.append("], size=").append(size).append("}");
         return str.toString();
+    }
+
+    /**
+     * Appends a representation of a node and its siblings to the provided StringBuilder.
+     * Each node's structure, including its children (if present), is included.
+     * The method processes the circular doubly-linked list of nodes.
+     *
+     * @param str the {@code StringBuilder} to which the nodes will be appended.
+     * @param node the starting node in the circular doubly-linked list to process.
+     */
+    private void appendNode(StringBuilder str, Node<T> node) {
+        Node<T> current = node;
+        do {
+            if (current != min && current.parent == null) {
+                str.append("Root");
+            }
+
+            str.append(current);
+
+            if (current.child != null) {
+                appendChildren(str, current.child);
+            }
+
+            if (current.right != node) {
+                str.append(", ");
+            }
+
+            current = current.right;
+        } while (current != node);
+    }
+
+    /**
+     * Appends a representation of the children of a given node to the provided StringBuilder.
+     * The children are recursively processed to include their structure in the heap.
+     *
+     * @param str the {@code StringBuilder} to which the child nodes will be appended.
+     * @param child the first child node to process.
+     */
+    private void appendChildren(StringBuilder str, Node<T> child) {
+        str.append(":[");
+        appendNode(str, child);
+        str.append("]");
     }
 }
