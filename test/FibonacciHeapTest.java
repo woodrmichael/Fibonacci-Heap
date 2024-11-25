@@ -115,5 +115,6 @@ class FibonacciHeapTest {
         String heapString = heap.toString();
         assertTrue(heapString.contains("size=3"));
         assertTrue(heapString.contains("MinNode{value=1, key=1, degree=0, marked=false"));
+        assertTrue(heapString.contains("RootNode{value=2, key=2, degree=0, marked=false"));
     }
 }

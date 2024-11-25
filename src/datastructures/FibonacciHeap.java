@@ -139,6 +139,17 @@ public class FibonacciHeap<T> {
     }
 
     /**
+     * Initializes a new Fibonacci Heap given a list of keys.
+     * @param keys every key to be added to the Fibonacci Heap.
+     */
+    public FibonacciHeap(List<Integer> keys) {
+        this();
+        for (Integer key : keys) {
+            this.insert(null, key);
+        }
+    }
+
+    /**
      * Inserts a new node in the root list to the right of the current minimum node.
      * No consolidation is performed when a new node is inserted.
      * Operation is performed in O(1) time. <br>
