@@ -142,7 +142,7 @@ public class FibonacciHeap<T> {
      * Initializes a new Fibonacci Heap given a list of keys.
      * @param keys every key to be added to the Fibonacci Heap.
      */
-    public FibonacciHeap(List<Integer> keys) {
+    public FibonacciHeap(Integer[] keys) {
         this();
         for (Integer key : keys) {
             this.insert(null, key);
