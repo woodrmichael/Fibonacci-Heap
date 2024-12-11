@@ -397,9 +397,9 @@ public class FibonacciHeap<T> {
      * @see #link(Node, Node)
      */
     private void consolidate() {
-        final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
-        final int degreeTableSize = Math.min(size, maxDegree); // More memory efficient for smaller heaps.
-        final Node<T>[] degreeTable = new Node[degreeTableSize];
+        final double phi = (1 + Math.sqrt(5)) / 2; // golden ratio
+        final int maxDegree = (int) Math.floor(Math.log(size) / Math.log(phi)) + 1;
+        final Node<T>[] degreeTable = new Node[maxDegree];
         final List<Node<T>> rootList = new ArrayList<>();
 
         Node<T> current = min;
